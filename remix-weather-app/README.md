@@ -15,4 +15,4 @@ npm run dev
 ```
 
 ## Deployment
-The application is automatically deployed via GitHub Actions to Azure AKS clusters. 
+The application is automatically deployed via GitHub Actions to Azure AKS clusters. # Trigger workflows
