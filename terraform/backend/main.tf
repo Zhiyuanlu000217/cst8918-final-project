@@ -3,7 +3,7 @@
 
 terraform {
   required_version = ">= 1.0"
-  
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -31,10 +31,10 @@ resource "azurerm_storage_account" "backend" {
   account_tier             = "Standard"
   account_replication_type = "LRS"
   min_tls_version          = "TLS1_2"
-  
+
   # Enable blob public access for state management
   allow_nested_items_to_be_public = false
-  
+
   tags = var.tags
 }
 

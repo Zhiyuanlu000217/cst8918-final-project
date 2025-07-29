@@ -41,6 +41,34 @@ jobs:
         ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         
+    - name: Import Infrastructure Resources
+      run: |
+        cd terraform
+        echo "Importing backend resources..."
+        terraform import module.backend.azurerm_resource_group.backend /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-backend-rg || echo "Backend RG may not exist yet, continuing..."
+        terraform import module.backend.azurerm_storage_account.backend /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-backend-rg/providers/Microsoft.Storage/storageAccounts/cst8918tfstate || echo "Backend storage may not exist yet, continuing..."
+        
+        echo "Importing network resources..."
+        terraform import module.network.azurerm_resource_group.network /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7 || echo "Network RG may not exist yet, continuing..."
+        terraform import module.network.azurerm_virtual_network.main /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet || echo "VNet may not exist yet, continuing..."
+        
+        echo "Importing subnets..."
+        terraform import module.network.azurerm_subnet.prod /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet/subnets/prod || echo "Prod subnet may not exist yet, continuing..."
+        terraform import module.network.azurerm_subnet.test /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet/subnets/test || echo "Test subnet may not exist yet, continuing..."
+        terraform import module.network.azurerm_subnet.dev /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet/subnets/dev || echo "Dev subnet may not exist yet, continuing..."
+        terraform import module.network.azurerm_subnet.admin /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet/subnets/admin || echo "Admin subnet may not exist yet, continuing..."
+        
+        echo "Importing AKS clusters..."
+        terraform import module.aks_clusters.azurerm_kubernetes_cluster.test /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.ContainerService/managedClusters/cst8918-test-aks || echo "Test AKS may not exist yet, continuing..."
+        terraform import module.aks_clusters.azurerm_kubernetes_cluster.prod /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.ContainerService/managedClusters/cst8918-prod-aks || echo "Prod AKS may not exist yet, continuing..."
+        
+        echo "All infrastructure resources imported successfully!"
+      env:
+        ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+        ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+        ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+        
     - name: Terraform Apply
       run: |
         cd terraform

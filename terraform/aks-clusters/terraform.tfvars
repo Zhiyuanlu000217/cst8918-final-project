@@ -9,7 +9,7 @@ test_cluster_name = "cst8918-test-aks"
 prod_cluster_name = "cst8918-prod-aks"
 
 # Node configurations
-test_node_count = 1
+test_node_count     = 1
 prod_min_node_count = 1
 prod_max_node_count = 3
 

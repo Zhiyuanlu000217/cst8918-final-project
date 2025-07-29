@@ -3,7 +3,7 @@
 
 # Resource group and location
 resource_group_name = "cst8918-final-project-group-7"
-location           = "East US"
+location            = "East US"
 
 # Container Registry
 acr_name = "cst8918weatheracr"
@@ -14,7 +14,7 @@ prod_redis_name = "cst8918-prod-redis"
 
 # Kubernetes configuration
 kubernetes_namespace = "weather-app"
-app_version         = "v1.0.1"
+app_version          = "v1.0.1"
 
 # Deployment replicas
 test_replicas = 1

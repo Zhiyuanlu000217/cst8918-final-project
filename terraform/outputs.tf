@@ -120,7 +120,7 @@ output "infrastructure_summary" {
   value = {
     backend = {
       storage_account = module.backend.storage_account_name
-      container      = module.backend.container_name
+      container       = module.backend.container_name
     }
     network = {
       vnet_name = module.network.vnet_name

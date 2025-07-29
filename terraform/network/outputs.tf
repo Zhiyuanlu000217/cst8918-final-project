@@ -54,29 +54,29 @@ output "network_config" {
   description = "Complete network configuration"
   value = {
     resource_group_name = azurerm_resource_group.network.name
-    vnet_name          = azurerm_virtual_network.main.name
-    vnet_id            = azurerm_virtual_network.main.id
-    vnet_address_space = azurerm_virtual_network.main.address_space
+    vnet_name           = azurerm_virtual_network.main.name
+    vnet_id             = azurerm_virtual_network.main.id
+    vnet_address_space  = azurerm_virtual_network.main.address_space
     subnets = {
       prod = {
-        id              = azurerm_subnet.prod.id
+        id               = azurerm_subnet.prod.id
         address_prefixes = azurerm_subnet.prod.address_prefixes
-        nsg_id          = azurerm_network_security_group.prod.id
+        nsg_id           = azurerm_network_security_group.prod.id
       }
       test = {
-        id              = azurerm_subnet.test.id
+        id               = azurerm_subnet.test.id
         address_prefixes = azurerm_subnet.test.address_prefixes
-        nsg_id          = azurerm_network_security_group.test.id
+        nsg_id           = azurerm_network_security_group.test.id
       }
       dev = {
-        id              = azurerm_subnet.dev.id
+        id               = azurerm_subnet.dev.id
         address_prefixes = azurerm_subnet.dev.address_prefixes
-        nsg_id          = azurerm_network_security_group.dev.id
+        nsg_id           = azurerm_network_security_group.dev.id
       }
       admin = {
-        id              = azurerm_subnet.admin.id
+        id               = azurerm_subnet.admin.id
         address_prefixes = azurerm_subnet.admin.address_prefixes
-        nsg_id          = azurerm_network_security_group.admin.id
+        nsg_id           = azurerm_network_security_group.admin.id
       }
     }
   }

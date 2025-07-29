@@ -70,10 +70,10 @@ output "clusters_config" {
   description = "Complete configuration for both clusters"
   value = {
     test = {
-      name                = azurerm_kubernetes_cluster.test.name
-      id                  = azurerm_kubernetes_cluster.test.id
-      host                = azurerm_kubernetes_cluster.test.kube_config.0.host
-      kubernetes_version  = azurerm_kubernetes_cluster.test.kubernetes_version
+      name               = azurerm_kubernetes_cluster.test.name
+      id                 = azurerm_kubernetes_cluster.test.id
+      host               = azurerm_kubernetes_cluster.test.kube_config.0.host
+      kubernetes_version = azurerm_kubernetes_cluster.test.kubernetes_version
       node_pool = {
         name                = azurerm_kubernetes_cluster.test.default_node_pool.0.name
         node_count          = azurerm_kubernetes_cluster.test.default_node_pool.0.node_count
@@ -82,10 +82,10 @@ output "clusters_config" {
       }
     }
     prod = {
-      name                = azurerm_kubernetes_cluster.prod.name
-      id                  = azurerm_kubernetes_cluster.prod.id
-      host                = azurerm_kubernetes_cluster.prod.kube_config.0.host
-      kubernetes_version  = azurerm_kubernetes_cluster.prod.kubernetes_version
+      name               = azurerm_kubernetes_cluster.prod.name
+      id                 = azurerm_kubernetes_cluster.prod.id
+      host               = azurerm_kubernetes_cluster.prod.kube_config.0.host
+      kubernetes_version = azurerm_kubernetes_cluster.prod.kubernetes_version
       node_pool = {
         name                = azurerm_kubernetes_cluster.prod.default_node_pool.0.name
         node_count          = azurerm_kubernetes_cluster.prod.default_node_pool.0.node_count
