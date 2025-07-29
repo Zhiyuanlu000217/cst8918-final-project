@@ -22,7 +22,8 @@ provider "azurerm" {
 }
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"
+  # Use AKS context when available, fallback to local config
+  config_path = var.kube_config_path != null ? var.kube_config_path : "~/.kube/config"
 }
 
 # Azure Container Registry (ACR)

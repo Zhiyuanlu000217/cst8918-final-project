@@ -47,13 +47,17 @@ jobs:
       run: |
         cd terraform/remix-weather-app
         terraform init
-        terraform apply -auto-approve -var="app_version=${{ github.sha }}"
+        # Import existing resources if they exist
+        chmod +x import-resources.sh
+        ./import-resources.sh || echo "Some resources may not exist yet, continuing..."
+        terraform apply -auto-approve -var="app_version=${{ github.sha }}" -var="kube_config_path=$KUBECONFIG"
       env:
         ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         TF_VAR_weather_api_key: ${{ secrets.WEATHER_API_KEY }}
+        KUBECONFIG: ${{ env.KUBE_CONFIG_PATH }}
 
   deploy-prod:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -89,10 +93,14 @@ jobs:
       run: |
         cd terraform/remix-weather-app
         terraform init
-        terraform apply -auto-approve -var="app_version=${{ github.sha }}"
+        # Import existing resources if they exist
+        chmod +x import-resources.sh
+        ./import-resources.sh || echo "Some resources may not exist yet, continuing..."
+        terraform apply -auto-approve -var="app_version=${{ github.sha }}" -var="kube_config_path=$KUBECONFIG"
       env:
         ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-        TF_VAR_weather_api_key: ${{ secrets.WEATHER_API_KEY }} 
+        TF_VAR_weather_api_key: ${{ secrets.WEATHER_API_KEY }}
+        KUBECONFIG: ${{ env.KUBE_CONFIG_PATH }} 
