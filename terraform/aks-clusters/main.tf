@@ -3,7 +3,7 @@
 
 terraform {
   required_version = ">= 1.0"
-  
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -22,7 +22,7 @@ resource "azurerm_kubernetes_cluster" "test" {
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix          = var.test_cluster_name
-  
+
   # Default node pool configuration
   default_node_pool {
     name                = "default"
@@ -33,24 +33,24 @@ resource "azurerm_kubernetes_cluster" "test" {
     enable_auto_scaling = false
     vnet_subnet_id      = var.test_subnet_id
   }
-  
+
   # Network profile
   network_profile {
-    network_plugin     = "azure"
-    network_policy     = "azure"
-    load_balancer_sku  = "standard"
-    service_cidr       = "172.16.0.0/16"
-    dns_service_ip     = "172.16.0.10"
+    network_plugin    = "azure"
+    network_policy    = "azure"
+    load_balancer_sku = "standard"
+    service_cidr      = "172.16.0.0/16"
+    dns_service_ip    = "172.16.0.10"
   }
-  
+
   # Identity
   identity {
     type = "SystemAssigned"
   }
-  
+
   # Kubernetes version
   kubernetes_version = var.kubernetes_version
-  
+
   # Tags
   tags = merge(var.tags, {
     Environment = "Test"
@@ -64,7 +64,7 @@ resource "azurerm_kubernetes_cluster" "prod" {
   location            = var.location
   resource_group_name = var.resource_group_name
   dns_prefix          = var.prod_cluster_name
-  
+
   # Default node pool configuration
   default_node_pool {
     name                = "default"
@@ -77,24 +77,24 @@ resource "azurerm_kubernetes_cluster" "prod" {
     max_count           = var.prod_max_node_count
     vnet_subnet_id      = var.prod_subnet_id
   }
-  
+
   # Network profile
   network_profile {
-    network_plugin     = "azure"
-    network_policy     = "azure"
-    load_balancer_sku  = "standard"
-    service_cidr       = "172.18.0.0/16"
-    dns_service_ip     = "172.18.0.10"
+    network_plugin    = "azure"
+    network_policy    = "azure"
+    load_balancer_sku = "standard"
+    service_cidr      = "172.18.0.0/16"
+    dns_service_ip    = "172.18.0.10"
   }
-  
+
   # Identity
   identity {
     type = "SystemAssigned"
   }
-  
+
   # Kubernetes version
   kubernetes_version = var.kubernetes_version
-  
+
   # Tags
   tags = merge(var.tags, {
     Environment = "Production"
@@ -107,6 +107,6 @@ resource "azurerm_user_assigned_identity" "aks_identity" {
   name                = "aks-identity"
   resource_group_name = var.resource_group_name
   location            = var.location
-  
+
   tags = var.tags
 } 
