@@ -2,7 +2,7 @@ name: Terraform Static Analysis
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ '*' ]  # Run on push to any branch
     paths:
       - 'terraform/**'
       - '.github/workflows/terraform-static-analysis.yml'
@@ -33,5 +33,11 @@ jobs:
         cd terraform
         terraform init -backend=false
         terraform validate
+        
+    - name: Setup tfsec
+      uses: aquasecurity/tfsec-action@v1.0.3
+      with:
+        working_directory: terraform
+        soft_fail: false
         
  

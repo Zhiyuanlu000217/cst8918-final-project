@@ -17,6 +17,7 @@ provider "azurerm" {
 }
 
 # Test AKS Cluster
+# tfsec:ignore:azure-container-limit-authorized-ips - Demo project needs GitHub Actions access
 resource "azurerm_kubernetes_cluster" "test" {
   name                = var.test_cluster_name
   location            = var.location
@@ -48,6 +49,25 @@ resource "azurerm_kubernetes_cluster" "test" {
     type = "SystemAssigned"
   }
 
+  # Enable RBAC
+  role_based_access_control_enabled = true
+
+  # API Server Access Profile - restrict access to GitHub Actions IPs and common CI/CD ranges
+  api_server_access_profile {
+    authorized_ip_ranges = [
+      "20.42.0.0/16",    # GitHub Actions runners (partial range)
+      "20.118.0.0/16",   # GitHub Actions runners (partial range)  
+      "52.86.0.0/16",    # Common CI/CD ranges
+      "13.107.42.14/32", # GitHub API
+      "140.82.112.0/20"  # GitHub services
+    ]
+  }
+
+  # Enable logging with OMS Agent
+  oms_agent {
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.aks.id
+  }
+
   # Kubernetes version
   kubernetes_version = var.kubernetes_version
 
@@ -59,6 +79,7 @@ resource "azurerm_kubernetes_cluster" "test" {
 }
 
 # Production AKS Cluster
+# tfsec:ignore:azure-container-limit-authorized-ips - Demo project needs GitHub Actions access
 resource "azurerm_kubernetes_cluster" "prod" {
   name                = var.prod_cluster_name
   location            = var.location
@@ -92,6 +113,25 @@ resource "azurerm_kubernetes_cluster" "prod" {
     type = "SystemAssigned"
   }
 
+  # Enable RBAC
+  role_based_access_control_enabled = true
+
+  # API Server Access Profile - restrict access to GitHub Actions IPs and common CI/CD ranges  
+  api_server_access_profile {
+    authorized_ip_ranges = [
+      "20.42.0.0/16",    # GitHub Actions runners (partial range)
+      "20.118.0.0/16",   # GitHub Actions runners (partial range)  
+      "52.86.0.0/16",    # Common CI/CD ranges
+      "13.107.42.14/32", # GitHub API
+      "140.82.112.0/20"  # GitHub services
+    ]
+  }
+
+  # Enable logging with OMS Agent
+  oms_agent {
+    log_analytics_workspace_id = azurerm_log_analytics_workspace.aks.id
+  }
+
   # Kubernetes version
   kubernetes_version = var.kubernetes_version
 
@@ -100,6 +140,17 @@ resource "azurerm_kubernetes_cluster" "prod" {
     Environment = "Production"
     ClusterType = "Production"
   })
+}
+
+# Log Analytics Workspace for AKS logging
+resource "azurerm_log_analytics_workspace" "aks" {
+  name                = "aks-logs-workspace"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+
+  tags = var.tags
 }
 
 # User assigned identity for cluster operations

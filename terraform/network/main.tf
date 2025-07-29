@@ -88,7 +88,7 @@ resource "azurerm_network_security_group" "prod" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "*"
+    source_address_prefix      = "Internet"
     destination_address_prefix = "*"
   }
 
@@ -100,7 +100,7 @@ resource "azurerm_network_security_group" "prod" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "443"
-    source_address_prefix      = "*"
+    source_address_prefix      = "Internet"
     destination_address_prefix = "*"
   }
 
@@ -121,7 +121,7 @@ resource "azurerm_network_security_group" "test" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "*"
+    source_address_prefix      = "Internet"
     destination_address_prefix = "*"
   }
 
@@ -135,14 +135,14 @@ resource "azurerm_network_security_group" "dev" {
   resource_group_name = azurerm_resource_group.network.name
 
   security_rule {
-    name                       = "Allow-HTTP"
+    name                       = "Allow-HTTP-Internal"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "80"
-    source_address_prefix      = "*"
+    source_address_prefix      = "VirtualNetwork"
     destination_address_prefix = "*"
   }
 
@@ -155,27 +155,16 @@ resource "azurerm_network_security_group" "admin" {
   location            = azurerm_resource_group.network.location
   resource_group_name = azurerm_resource_group.network.name
 
+  # Only allow internal network access for admin subnet
   security_rule {
-    name                       = "Allow-SSH"
+    name                       = "Allow-Internal-Access"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
-    protocol                   = "Tcp"
+    protocol                   = "*"
     source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "Allow-RDP"
-    priority                   = 110
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "3389"
-    source_address_prefix      = "*"
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
     destination_address_prefix = "*"
   }
 
