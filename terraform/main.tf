@@ -32,6 +32,7 @@ module "backend" {
   location           = var.location
   storage_account_name = var.storage_account_name
   container_name     = var.container_name
+  enable_resource_lock = var.enable_resource_lock
 }
 
 # Network Module - Base network infrastructure
