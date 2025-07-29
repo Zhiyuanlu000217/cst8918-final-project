@@ -86,6 +86,10 @@ resource "kubernetes_namespace" "weather_app" {
       project = "cst8918-final-project"
     }
   }
+  
+  lifecycle {
+    ignore_changes = [metadata[0].name]
+  }
 }
 
 # Kubernetes Secret for Redis connection strings
