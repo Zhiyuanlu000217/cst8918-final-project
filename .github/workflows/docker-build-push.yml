@@ -1,0 +1,46 @@
+name: Docker Build and Push
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'remix-weather-app/**'
+      - '.github/workflows/docker-build-push.yml'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+    - name: Login to Azure Container Registry
+      uses: azure/docker-login@v1
+      with:
+        login-server: cst8918weatheracr.azurecr.io
+        username: ${{ secrets.ACR_USERNAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+        
+    - name: Build and Push Docker Image
+      run: |
+        cd remix-weather-app
+        docker build --platform linux/amd64 -t cst8918weatheracr.azurecr.io/weather-app:${{ github.sha }} .
+        docker push cst8918weatheracr.azurecr.io/weather-app:${{ github.sha }}
+        
+    - name: Tag as latest
+      run: |
+        cd remix-weather-app
+        docker tag cst8918weatheracr.azurecr.io/weather-app:${{ github.sha }} cst8918weatheracr.azurecr.io/weather-app:latest
+        docker push cst8918weatheracr.azurecr.io/weather-app:latest 

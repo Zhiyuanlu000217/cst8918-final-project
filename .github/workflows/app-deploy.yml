@@ -1,0 +1,80 @@
+name: App Deployment
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'remix-weather-app/**'
+      - '.github/workflows/app-deploy.yml'
+  push:
+    branches: [ main ]
+    paths:
+      - 'remix-weather-app/**'
+      - '.github/workflows/app-deploy.yml'
+
+jobs:
+  deploy-test:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+    - name: Set AKS Context
+      uses: azure/aks-set-context@v4
+      with:
+        resource-group: cst8918-final-project-group-7
+        cluster-name: cst8918-test-aks
+        
+    - name: Deploy to Test Environment
+      run: |
+        cd terraform/remix-weather-app
+        terraform init
+        terraform apply -auto-approve -var="app_version=${{ github.sha }}"
+      env:
+        TF_VAR_weather_api_key: ${{ secrets.WEATHER_API_KEY }}
+
+  deploy-prod:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    
+    permissions:
+      id-token: write
+      contents: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        
+    - name: Set AKS Context
+      uses: azure/aks-set-context@v4
+      with:
+        resource-group: cst8918-final-project-group-7
+        cluster-name: cst8918-prod-aks
+        
+    - name: Deploy to Production Environment
+      run: |
+        cd terraform/remix-weather-app
+        terraform init
+        terraform apply -auto-approve -var="app_version=${{ github.sha }}"
+      env:
+        TF_VAR_weather_api_key: ${{ secrets.WEATHER_API_KEY }} 
