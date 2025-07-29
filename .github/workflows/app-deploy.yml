@@ -57,16 +57,31 @@ jobs:
         ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         
-    - name: Import Kubernetes Resources
+    - name: Import ALL Kubernetes Resources
       run: |
         cd terraform/remix-weather-app
-        # Import Kubernetes resources (after AKS context is set)
+        # Import ALL Kubernetes resources (after AKS context is set)
+        echo "Importing Kubernetes Namespace..."
         terraform import kubernetes_namespace.weather_app weather-app || echo "Namespace may not exist yet, continuing..."
+        
+        echo "Importing Kubernetes Secrets..."
         terraform import kubernetes_secret.redis_connection weather-app/redis-connection || echo "Redis secret may not exist yet, continuing..."
         terraform import kubernetes_secret.weather_api_key weather-app/weather-api-key || echo "Weather API secret may not exist yet, continuing..."
         terraform import kubernetes_secret.acr_credentials weather-app/acr-credentials || echo "ACR credentials secret may not exist yet, continuing..."
+        
+        echo "Importing Kubernetes Services..."
         terraform import kubernetes_service.weather_app_test weather-app/weather-app-test-service || echo "Test service may not exist yet, continuing..."
         terraform import kubernetes_service.weather_app_prod weather-app/weather-app-prod-service || echo "Prod service may not exist yet, continuing..."
+        
+        echo "Importing Kubernetes Deployments..."
+        terraform import kubernetes_deployment.weather_app_test weather-app/weather-app-test || echo "Test deployment may not exist yet, continuing..."
+        terraform import kubernetes_deployment.weather_app_prod weather-app/weather-app-prod || echo "Prod deployment may not exist yet, continuing..."
+        
+        echo "Importing Kubernetes Ingress..."
+        terraform import kubernetes_ingress_v1.weather_app_test weather-app/weather-app-test-ingress || echo "Test ingress may not exist yet, continuing..."
+        terraform import kubernetes_ingress_v1.weather_app_prod weather-app/weather-app-prod-ingress || echo "Prod ingress may not exist yet, continuing..."
+        
+        echo "All Kubernetes resources imported successfully!"
       env:
         ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -131,16 +146,31 @@ jobs:
         ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
         
-    - name: Import Kubernetes Resources
+    - name: Import ALL Kubernetes Resources
       run: |
         cd terraform/remix-weather-app
-        # Import Kubernetes resources (after AKS context is set)
+        # Import ALL Kubernetes resources (after AKS context is set)
+        echo "Importing Kubernetes Namespace..."
         terraform import kubernetes_namespace.weather_app weather-app || echo "Namespace may not exist yet, continuing..."
+        
+        echo "Importing Kubernetes Secrets..."
         terraform import kubernetes_secret.redis_connection weather-app/redis-connection || echo "Redis secret may not exist yet, continuing..."
         terraform import kubernetes_secret.weather_api_key weather-app/weather-api-key || echo "Weather API secret may not exist yet, continuing..."
         terraform import kubernetes_secret.acr_credentials weather-app/acr-credentials || echo "ACR credentials secret may not exist yet, continuing..."
+        
+        echo "Importing Kubernetes Services..."
         terraform import kubernetes_service.weather_app_test weather-app/weather-app-test-service || echo "Test service may not exist yet, continuing..."
         terraform import kubernetes_service.weather_app_prod weather-app/weather-app-prod-service || echo "Prod service may not exist yet, continuing..."
+        
+        echo "Importing Kubernetes Deployments..."
+        terraform import kubernetes_deployment.weather_app_test weather-app/weather-app-test || echo "Test deployment may not exist yet, continuing..."
+        terraform import kubernetes_deployment.weather_app_prod weather-app/weather-app-prod || echo "Prod deployment may not exist yet, continuing..."
+        
+        echo "Importing Kubernetes Ingress..."
+        terraform import kubernetes_ingress_v1.weather_app_test weather-app/weather-app-test-ingress || echo "Test ingress may not exist yet, continuing..."
+        terraform import kubernetes_ingress_v1.weather_app_prod weather-app/weather-app-prod-ingress || echo "Prod ingress may not exist yet, continuing..."
+        
+        echo "All Kubernetes resources imported successfully!"
       env:
         ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
