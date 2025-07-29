@@ -7,6 +7,14 @@ on:
       - 'terraform/**'
       - '.github/workflows/terraform-apply.yml'
 
+env:
+  BACKEND_RG: cst8918-backend-rg
+  BACKEND_STORAGE_ACCOUNT: cst8918tfstate
+  RESOURCE_GROUP: cst8918-final-project-group-7
+  VNET_NAME: cst8918-vnet
+  TEST_CLUSTER_NAME: cst8918-test-aks
+  PROD_CLUSTER_NAME: cst8918-prod-aks
+
 jobs:
   terraform-apply:
     runs-on: ubuntu-latest
@@ -45,22 +53,22 @@ jobs:
       run: |
         cd terraform
         echo "Importing backend resources..."
-        terraform import module.backend.azurerm_resource_group.backend /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-backend-rg || echo "Backend RG may not exist yet, continuing..."
-        terraform import module.backend.azurerm_storage_account.backend /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-backend-rg/providers/Microsoft.Storage/storageAccounts/cst8918tfstate || echo "Backend storage may not exist yet, continuing..."
+        terraform import module.backend.azurerm_resource_group.backend "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.BACKEND_RG }}" || echo "Backend RG may not exist yet, continuing..."
+        terraform import module.backend.azurerm_storage_account.backend "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.BACKEND_RG }}/providers/Microsoft.Storage/storageAccounts/${{ env.BACKEND_STORAGE_ACCOUNT }}" || echo "Backend storage may not exist yet, continuing..."
         
         echo "Importing network resources..."
-        terraform import module.network.azurerm_resource_group.network /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7 || echo "Network RG may not exist yet, continuing..."
-        terraform import module.network.azurerm_virtual_network.main /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet || echo "VNet may not exist yet, continuing..."
+        terraform import module.network.azurerm_resource_group.network "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.RESOURCE_GROUP }}" || echo "Network RG may not exist yet, continuing..."
+        terraform import module.network.azurerm_virtual_network.main "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.RESOURCE_GROUP }}/providers/Microsoft.Network/virtualNetworks/${{ env.VNET_NAME }}" || echo "VNet may not exist yet, continuing..."
         
         echo "Importing subnets..."
-        terraform import module.network.azurerm_subnet.prod /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet/subnets/prod || echo "Prod subnet may not exist yet, continuing..."
-        terraform import module.network.azurerm_subnet.test /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet/subnets/test || echo "Test subnet may not exist yet, continuing..."
-        terraform import module.network.azurerm_subnet.dev /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet/subnets/dev || echo "Dev subnet may not exist yet, continuing..."
-        terraform import module.network.azurerm_subnet.admin /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.Network/virtualNetworks/cst8918-vnet/subnets/admin || echo "Admin subnet may not exist yet, continuing..."
+        terraform import module.network.azurerm_subnet.prod "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.RESOURCE_GROUP }}/providers/Microsoft.Network/virtualNetworks/${{ env.VNET_NAME }}/subnets/prod" || echo "Prod subnet may not exist yet, continuing..."
+        terraform import module.network.azurerm_subnet.test "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.RESOURCE_GROUP }}/providers/Microsoft.Network/virtualNetworks/${{ env.VNET_NAME }}/subnets/test" || echo "Test subnet may not exist yet, continuing..."
+        terraform import module.network.azurerm_subnet.dev "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.RESOURCE_GROUP }}/providers/Microsoft.Network/virtualNetworks/${{ env.VNET_NAME }}/subnets/dev" || echo "Dev subnet may not exist yet, continuing..."
+        terraform import module.network.azurerm_subnet.admin "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.RESOURCE_GROUP }}/providers/Microsoft.Network/virtualNetworks/${{ env.VNET_NAME }}/subnets/admin" || echo "Admin subnet may not exist yet, continuing..."
         
         echo "Importing AKS clusters..."
-        terraform import module.aks_clusters.azurerm_kubernetes_cluster.test /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.ContainerService/managedClusters/cst8918-test-aks || echo "Test AKS may not exist yet, continuing..."
-        terraform import module.aks_clusters.azurerm_kubernetes_cluster.prod /subscriptions/07de8b92-8a0e-462b-9b32-7bfdaf51200e/resourceGroups/cst8918-final-project-group-7/providers/Microsoft.ContainerService/managedClusters/cst8918-prod-aks || echo "Prod AKS may not exist yet, continuing..."
+        terraform import module.aks_clusters.azurerm_kubernetes_cluster.test "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.RESOURCE_GROUP }}/providers/Microsoft.ContainerService/managedClusters/${{ env.TEST_CLUSTER_NAME }}" || echo "Test AKS may not exist yet, continuing..."
+        terraform import module.aks_clusters.azurerm_kubernetes_cluster.prod "/subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ env.RESOURCE_GROUP }}/providers/Microsoft.ContainerService/managedClusters/${{ env.PROD_CLUSTER_NAME }}" || echo "Prod AKS may not exist yet, continuing..."
         
         echo "All infrastructure resources imported successfully!"
       env:
