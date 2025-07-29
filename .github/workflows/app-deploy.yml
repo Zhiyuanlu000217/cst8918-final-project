@@ -3,14 +3,8 @@ name: App Deployment
 on:
   pull_request:
     branches: [ main ]
-    paths:
-      - 'remix-weather-app/**'
-      - '.github/workflows/app-deploy.yml'
   push:
     branches: [ main ]
-    paths:
-      - 'remix-weather-app/**'
-      - '.github/workflows/app-deploy.yml'
 
 jobs:
   deploy-test:
