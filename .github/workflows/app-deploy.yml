@@ -38,6 +38,11 @@ jobs:
         resource-group: cst8918-final-project-group-7
         cluster-name: cst8918-test-aks
         
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "1.5.0"
+        
     - name: Deploy to Test Environment
       run: |
         cd terraform/remix-weather-app
@@ -74,6 +79,11 @@ jobs:
       with:
         resource-group: cst8918-final-project-group-7
         cluster-name: cst8918-prod-aks
+        
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "1.5.0"
         
     - name: Deploy to Production Environment
       run: |
