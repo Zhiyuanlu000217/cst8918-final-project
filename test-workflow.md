@@ -13,3 +13,7 @@ This is a test file to trigger the GitHub Actions workflows.
 - Terraform plan should show no changes (infrastructure already deployed)
 - Docker build should succeed
 - App deployment should work 
+
+
+## Small changes
+- To test status check
