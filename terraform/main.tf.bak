@@ -28,7 +28,7 @@ provider "azurerm" {
 module "backend" {
   source = "./backend"
 
-  resource_group_name  = "cst8918-backend-rg"
+  resource_group_name  = var.resource_group_name
   location             = var.location
   storage_account_name = var.storage_account_name
   container_name       = var.container_name
@@ -69,7 +69,7 @@ module "aks_clusters" {
 module "remix_weather_app" {
   source = "./remix-weather-app"
 
-  resource_group_name  = "cst8918-backend-rg"
+  resource_group_name  = var.resource_group_name
   location             = var.location
   acr_name             = var.acr_name
   test_redis_name      = var.test_redis_name
