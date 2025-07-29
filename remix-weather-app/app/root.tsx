@@ -14,6 +14,7 @@ export const links: LinksFunction = () => [
 ];
 
 export default function App() {
+  // Test Docker build trigger
   return (
     <html lang="en">
       <head>
@@ -31,4 +32,3 @@ export default function App() {
     </html>
   );
 }
-# Test Docker build trigger
