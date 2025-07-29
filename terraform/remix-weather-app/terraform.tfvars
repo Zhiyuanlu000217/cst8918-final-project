@@ -18,7 +18,7 @@ app_version         = "v1.0.1"
 
 # Deployment replicas
 test_replicas = 1
-prod_replicas = 2
+prod_replicas = 1
 
 # Domain names (update these to your actual domains)
 test_domain = "test-weather.cst8918.com"
