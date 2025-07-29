@@ -62,6 +62,11 @@ jobs:
         cd terraform/remix-weather-app
         # Import Kubernetes resources (after AKS context is set)
         terraform import kubernetes_namespace.weather_app weather-app || echo "Namespace may not exist yet, continuing..."
+        terraform import kubernetes_secret.redis_connection weather-app/redis-connection || echo "Redis secret may not exist yet, continuing..."
+        terraform import kubernetes_secret.weather_api_key weather-app/weather-api-key || echo "Weather API secret may not exist yet, continuing..."
+        terraform import kubernetes_secret.acr_credentials weather-app/acr-credentials || echo "ACR credentials secret may not exist yet, continuing..."
+        terraform import kubernetes_service.weather_app_test weather-app/weather-app-test-service || echo "Test service may not exist yet, continuing..."
+        terraform import kubernetes_service.weather_app_prod weather-app/weather-app-prod-service || echo "Prod service may not exist yet, continuing..."
       env:
         ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -131,6 +136,11 @@ jobs:
         cd terraform/remix-weather-app
         # Import Kubernetes resources (after AKS context is set)
         terraform import kubernetes_namespace.weather_app weather-app || echo "Namespace may not exist yet, continuing..."
+        terraform import kubernetes_secret.redis_connection weather-app/redis-connection || echo "Redis secret may not exist yet, continuing..."
+        terraform import kubernetes_secret.weather_api_key weather-app/weather-api-key || echo "Weather API secret may not exist yet, continuing..."
+        terraform import kubernetes_secret.acr_credentials weather-app/acr-credentials || echo "ACR credentials secret may not exist yet, continuing..."
+        terraform import kubernetes_service.weather_app_test weather-app/weather-app-test-service || echo "Test service may not exist yet, continuing..."
+        terraform import kubernetes_service.weather_app_prod weather-app/weather-app-prod-service || echo "Prod service may not exist yet, continuing..."
       env:
         ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
         ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
